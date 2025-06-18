@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+//generator client {
+//  provider = "prisma-client-js"
+//  output   = "../src/generated/prisma"
+//}
+
+//datasource db {
+//  provider = "postgresql"
+//  url      = env("DATABASE_URL")
+///}
+
+//model User {
+//  id    Int    @id @default(autoincrement())
+//  name  String
+//  email String @unique
+//}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum transaction_status {
+  pending
+  completed
+  failed
+}
+
+enum transaction_type {
+  credit
+  debit
+  refund
+}
+
+model Student {
+  student_id String   @id @default(uuid())
+  first_name String
+  last_name  String
+
+  transactions Transaction[]
+  wallets      Wallet[]
+}
+
+model Merchant {
+  merchant_id String   @id @default(uuid())
+  first_name  String
+  last_name   String
+
+  transactions Transaction[]
+}
+
+model Wallet {
+  wallet_id String @id @default(uuid())
+  user_id   String
+  balance   Int
+
+  // Relations
+  student Student? @relation(fields: [user_id], references: [student_id])
+  ledger  Ledger[]
+}
+
+model Transaction {
+  transaction_id String   @id @default(uuid())
+  request_id     String
+  student_id     String
+  merchant_id    String
+  amount         Int
+  created_at     DateTime
+  status         transaction_status
+
+  // Relations
+  student  Student  @relation(fields: [student_id], references: [student_id])
+  merchant Merchant @relation(fields: [merchant_id], references: [merchant_id])
+  ledger   Ledger[]
+}
+
+model Ledger {
+  ledger_id        String           @id @default(uuid())
+  transaction_id   String
+  request_id       String
+  wallet_id        String
+  user_id          String
+  amount           Int
+  transaction_type transaction_type
+
+  // Relations
+  transaction Transaction @relation(fields: [transaction_id], references: [transaction_id])
+  wallet      Wallet      @relation(fields: [wallet_id], references: [wallet_id])
+}
