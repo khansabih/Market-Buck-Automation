@@ -1,28 +1,30 @@
 import { Router } from 'express'; // ✅ from 'express' only
 import {
   listStudents,
-  createStudent,
   getStudent,
   updateStudent,
   deleteStudent,
+  registerStudent,
   loginStudent,
   logoutStudent,
   refreshToken,
   getDashboard,
   getBalanceHistory,
-  createTransaction
+  createTransaction,
+  verifyEmail
 } from '../controllers/studentController';
 
 const router = Router();
 
 // Student Management
 router.get('/', listStudents);
-router.post('/', createStudent);
 router.get('/:student_id', getStudent);
 router.put('/:student_id', updateStudent);
 router.delete('/:student_id', deleteStudent);
 
 // Auth
+router.post('/register', registerStudent);
+router.get('/verifyEmail', verifyEmail);
 router.post('/auth/login', loginStudent);
 router.post('/auth/logout', logoutStudent);
 router.post('/auth/refresh', refreshToken);
