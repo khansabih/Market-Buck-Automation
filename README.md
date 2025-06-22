@@ -76,3 +76,7 @@ npx prisma migrate dev --name init
 
 # 5. Start the dev server
 npm run dev
+```
+
+## Contact
+For queries or collaboration, feel free to reach out on [LinkedIn](https://www.linkedin.com/in/sabih-khan-1824021a3/)
